@@ -1,4 +1,4 @@
-package tr.com.argela.producer;
+package tr.com.argela.producer.config;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,9 +13,9 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
 @Configuration
-public class KafkaProducerConfig {
+public class GeneralConfig {
 
-    @Value(value = "0.0.0.0:9092")
+    @Value(value = "${kafka.url}")
     private String bootstrapAddress;
 
     @Bean

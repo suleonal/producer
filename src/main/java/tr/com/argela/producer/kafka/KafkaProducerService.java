@@ -1,4 +1,4 @@
-package tr.com.argela.producer;
+package tr.com.argela.producer.kafka;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,33 +12,30 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Service
 public class KafkaProducerService {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(KafkaProducerService.class);
 
-
-    @Value(value = "otme")
+    @Value(value = "${kafka.topic}")
     private String topicName;
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    public void sendMessage(String message) 
-	{
-		ListenableFuture<SendResult<String, String>> future 
-			= this.kafkaTemplate.send(topicName, message);
-		
-		future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
+    public void sendMessage(String message) {
+        ListenableFuture<SendResult<String, String>> future = this.kafkaTemplate.send(topicName, message);
+
+        future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
             @Override
             public void onSuccess(SendResult<String, String> result) {
-            	logger.info("Sent message: " + message 
-            			+ " with offset: " + result.getRecordMetadata().offset());
+                logger.info("Sent message: " + message
+                        + " with offset: " + result.getRecordMetadata().offset());
             }
 
             @Override
             public void onFailure(Throwable ex) {
-            	logger.error("Unable to send message : " + message, ex);
+                logger.error("Unable to send message : " + message, ex);
             }
-       });
-	}
-    
+        });
+    }
+
 }
